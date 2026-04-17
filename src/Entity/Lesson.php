@@ -38,9 +38,16 @@ class Lesson
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'lesson')]
     private Collection $orderItems;
 
+    /**
+     * @var Collection<int, LessonValidation>
+     */
+    #[ORM\OneToMany(targetEntity: LessonValidation::class, mappedBy: 'lesson')]
+    private Collection $lessonValidations;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->lessonValidations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +139,36 @@ class Lesson
             // set the owning side to null (unless already changed)
             if ($orderItem->getLesson() === $this) {
                 $orderItem->setLesson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LessonValidation>
+     */
+    public function getLessonValidations(): Collection
+    {
+        return $this->lessonValidations;
+    }
+
+    public function addLessonValidation(LessonValidation $lessonValidation): static
+    {
+        if (!$this->lessonValidations->contains($lessonValidation)) {
+            $this->lessonValidations->add($lessonValidation);
+            $lessonValidation->setLesson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLessonValidation(LessonValidation $lessonValidation): static
+    {
+        if ($this->lessonValidations->removeElement($lessonValidation)) {
+            // set the owning side to null (unless already changed)
+            if ($lessonValidation->getLesson() === $this) {
+                $lessonValidation->setLesson(null);
             }
         }
 
