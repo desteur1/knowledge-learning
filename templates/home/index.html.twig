@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<h1>Liste des thèmes</h1>
+
+<ul>
+    {% for theme in themes %}
+        <li>
+            {{ theme.name }}
+
+            <ul>
+                {% for cursus in theme.cursus %}
+                    <li>
+                        <a href="{{ path('cursus_show', {id: cursus.id}) }}">
+                            {{ cursus.name }} - {{ cursus.price }} €
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
