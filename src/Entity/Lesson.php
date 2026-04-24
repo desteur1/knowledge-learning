@@ -17,7 +17,7 @@ class Lesson
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -55,14 +55,14 @@ class Lesson
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): static
+    public function setName(string $name): static
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }

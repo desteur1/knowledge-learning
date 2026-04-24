@@ -13,17 +13,14 @@ class OrderItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?float $price = null;
-
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Order $orderEntity = null;
+    private ?Order $order = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\ManyToOne]
     private ?Cursus $cursus = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderItems')]
+    #[ORM\ManyToOne]
     private ?Lesson $lesson = null;
 
     public function getId(): ?int
@@ -31,27 +28,14 @@ class OrderItem
         return $this->id;
     }
 
-    public function getPrice(): ?float
+    public function getOrder(): ?Order
     {
-        return $this->price;
+        return $this->order;
     }
 
-    public function setPrice(float $price): static
+    public function setOrder(?Order $order): static
     {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getOrderEntity(): ?Order
-    {
-        return $this->orderEntity;
-    }
-
-    public function setOrderEntity(?Order $orderEntity): static
-    {
-        $this->orderEntity = $orderEntity;
-
+        $this->order = $order;
         return $this;
     }
 
@@ -63,7 +47,6 @@ class OrderItem
     public function setCursus(?Cursus $cursus): static
     {
         $this->cursus = $cursus;
-
         return $this;
     }
 
@@ -75,7 +58,6 @@ class OrderItem
     public function setLesson(?Lesson $lesson): static
     {
         $this->lesson = $lesson;
-
         return $this;
     }
 }

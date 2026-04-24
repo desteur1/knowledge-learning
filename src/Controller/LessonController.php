@@ -21,7 +21,6 @@ final class LessonController extends AbstractController
     public function show(Lesson $lesson): Response
     {
         $user = $this->getUser();
-
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }

@@ -16,7 +16,7 @@
             {{ theme.name }}
 
             <ul>
-                {% for cursus in theme.cursus %}
+                {% for cursus in theme.cursuses %}
                     <li>
                         <a href="{{ path('cursus_show', {id: cursus.id}) }}">
                             {{ cursus.name }} - {{ cursus.price }} €

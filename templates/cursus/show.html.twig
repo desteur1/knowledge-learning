@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cursus{% endblock %}
+
+{% block body %}
+
+<style>
+   
+</style>
+
+<div class="example-wrapper">
+    <h2>Leçons du cursus</h2>
+
+    <ul>
+        {% for lesson in lessons %}
+            <li>
+                <a href="{{ path('lesson_show', {id: lesson.id}) }}">
+                    {{ lesson.name }} - {{ lesson.price }} €
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('purchase_cursus', {id: cursus.id}) }}" class="btn btn-success">
+        Acheter ce cursus ({{ cursus.price }} €)
+    </a>
+
+</div>
+
+{% endblock %}
