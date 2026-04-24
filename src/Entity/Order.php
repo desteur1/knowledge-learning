@@ -16,42 +16,28 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?float $totalPrice = null;
+    #[ORM\Column(length: 20)]
+    private ?string $status = 'pending';
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    /**
-     * @var Collection<int, OrderItem>
-     */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'orderEntity')]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $orderItems;
 
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTotalPrice(): ?float
-    {
-        return $this->totalPrice;
-    }
-
-    public function setTotalPrice(float $totalPrice): static
-    {
-        $this->totalPrice = $totalPrice;
-
-        return $this;
     }
 
     public function getStatus(): ?string
@@ -62,8 +48,12 @@ class Order
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 
     public function getUser(): ?User
@@ -74,7 +64,6 @@ class Order
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -90,7 +79,7 @@ class Order
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems->add($orderItem);
-            $orderItem->setOrderEntity($this);
+            $orderItem->setOrder($this);
         }
 
         return $this;
@@ -99,9 +88,8 @@ class Order
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
-            if ($orderItem->getOrderEntity() === $this) {
-                $orderItem->setOrderEntity(null);
+            if ($orderItem->getOrder() === $this) {
+                $orderItem->setOrder(null);
             }
         }
 

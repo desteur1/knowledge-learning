@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>{{ lesson.name }}</h1>
+
+<p>Prix : {{ lesson.price }} €</p>
+
+<p>{{ lesson.content }}</p>
+
+<video src="{{ lesson.videoUrl }}" controls width="600"></video>
+
+
+<a href="{{ path('purchase_lesson', {id: lesson.id}) }}" class="btn btn-primary mt-3">
+    Acheter cette leçon ({{ lesson.price }} €)
+</a>
+
+{% endblock %}
+

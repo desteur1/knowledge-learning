@@ -11,14 +11,29 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
 
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
+        
     </head>
     <body>
+
+    {# Les messages flash #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
         {% block body %}{% endblock %}
+
+        <script>
+            // Faire disparaître les messages flash après 10 secondes
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(el => {
+                    el.style.transition = "opacity 0.5s";
+                    el.style.opacity = "0";
+                    setTimeout(() => el.remove(), 500);
+                });
+            }, 10000);
+        </script>
     </body>
 </html>
