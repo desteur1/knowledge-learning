@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Lesson;
+use App\Entity\Cursus;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -238,6 +240,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+        // =========================
+        // view lessons already purchased by the user
+        // =========================
+        public function hasPurchasedLesson(Lesson $lesson): bool
+    {
+        foreach ($this->getOrders() as $order) {
+            if ($order->getStatus() !== 'paid') continue;
+
+            foreach ($order->getOrderItems() as $item) {
+                if ($item->getLesson() && $item->getLesson()->getId() === $lesson->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+         // =========================
+        // view courses already purchased by the user
+        // =========================
+       public function hasPurchasedCursus(Cursus $cursus): bool
+    {
+        foreach ($this->getOrders() as $order) {
+            if ($order->getStatus() !== 'paid') continue;
+
+            foreach ($order->getOrderItems() as $item) {
+                if ($item->getCursus() && $item->getCursus()->getId() === $cursus->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
    
 

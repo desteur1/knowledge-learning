@@ -10,10 +10,15 @@
 
 <video src="{{ lesson.videoUrl }}" controls width="600"></video>
 
+<hr>
 
-<a href="{{ path('purchase_lesson', {id: lesson.id}) }}" class="btn btn-primary mt-3">
-    Acheter cette leçon ({{ lesson.price }} €)
-</a>
+{% if user and (user.hasPurchasedLesson(lesson) or user.hasPurchasedCursus(lesson.cursus)) %}
+    <strong>Vous avez accès à cette leçon.</strong>
+{% else %}
+    <a href="{{ path('purchase_lesson', {id: lesson.id}) }}" class="btn btn-primary mt-3">
+        Acheter cette leçon ({{ lesson.price }} €)
+    </a>
+{% endif %}
 
 {% endblock %}
 

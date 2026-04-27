@@ -57,7 +57,8 @@ final class LessonController extends AbstractController
         }
 
         return $this->render('lesson/show.html.twig', [
-            'lesson' => $lesson
+            'lesson' => $lesson,
+            'user' => $user,
         ]);
     }
 }
