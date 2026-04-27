@@ -23,7 +23,8 @@ final class CursusController extends AbstractController
     {
         return $this->render('cursus/show.html.twig', [
             'cursus' => $cursus,
-            'lessons' => $cursus->getLessons()
+            'lessons' => $cursus->getLessons(),
+            'user' => $this->getUser(),
         ]);
     }
 }

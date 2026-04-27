@@ -1,29 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cursus{% endblock %}
+{% block title %}{{ cursus.name }}{% endblock %}
 
 {% block body %}
 
-<style>
-   
-</style>
-
 <div class="example-wrapper">
+
     <h2>Leçons du cursus</h2>
 
     <ul>
         {% for lesson in lessons %}
             <li>
-                <a href="{{ path('lesson_show', {id: lesson.id}) }}">
-                    {{ lesson.name }} - {{ lesson.price }} €
-                </a>
+                {{ lesson.name }} - {{ lesson.price }} €
+
+                {% if user and (user.hasPurchasedLesson(lesson) or user.hasPurchasedCursus(cursus)) %}
+                    <a href="{{ path('lesson_show', {id: lesson.id}) }}">Accéder</a>
+                {% else %}
+                    <a href="{{ path('purchase_lesson', {id: lesson.id}) }}">Acheter</a>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
 
-    <a href="{{ path('purchase_cursus', {id: cursus.id}) }}" class="btn btn-success">
-        Acheter ce cursus ({{ cursus.price }} €)
-    </a>
+    <hr>
+
+    {% if user and user.hasPurchasedCursus(cursus) %}
+        <strong>Vous avez déjà acheté ce cursus.</strong><br>
+        <a href="{{ path('lesson_show', {id: lessons|first.id}) }}">
+            Commencer le cursus
+         </a>
+    {% else %}
+        <a href="{{ path('purchase_cursus', {id: cursus.id}) }}">
+            Acheter ce cursus ({{ cursus.price }} €)
+        </a>
+    {% endif %}
 
 </div>
 
