@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes certifications{% endblock %}
+
+{% block body %}
+
+<h1>Mes certifications</h1>
+
+{% if certifications is empty %}
+    <p>Aucune certification obtenue pour le moment.</p>
+{% else %}
+    <ul>
+        {% for cert in certifications %}
+            <li>
+                🎓 <strong>{{ cert.cursus.name }}</strong><br>
+                Obtenue le : {{ cert.obtainedAt|date('d/m/Y') }}<br>
+
+                <a href="{{ path('cursus_show', {id: cert.cursus.id}) }}">
+                    Voir le cursus
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}
