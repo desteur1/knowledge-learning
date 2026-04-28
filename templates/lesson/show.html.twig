@@ -20,5 +20,35 @@
     </a>
 {% endif %}
 
+<hr>
+
+{% if user and (user.hasPurchasedLesson(lesson) or user.hasPurchasedCursus(lesson.cursus)) %}
+
+    {% set validated = false %}
+    {% for v in user.lessonValidations %}
+        {% if v.lesson.id == lesson.id %}
+            {% set validated = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if validated %}
+        <strong>Leçon validée ✔</strong>
+    {% else %}
+        <a href="{{ path('lesson_validate', {id: lesson.id}) }}" class="btn btn-success mt-3">
+            Valider cette leçon
+        </a>
+    {% endif %}
+
+{% endif %}
+
+{% set next = user.getNextLessonToStudy(lesson.cursus) %}
+
+{% if next and next.id != lesson.id %}
+    <a href="{{ path('lesson_show', {id: next.id}) }}" class="btn btn-success mt-3">
+        Leçon suivante →
+    </a>
+{% endif %}
+
+
 {% endblock %}
 

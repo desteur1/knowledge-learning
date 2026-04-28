@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+
 use App\Entity\Lesson;
 use App\Entity\Cursus;
+use App\Entity\Order;
+use App\Entity\LessonValidation;
+use App\Entity\Certification;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -273,6 +277,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return false;
     }
+      
+
+      // =========================
+        // count validated lessons for a given cursus
+        // =========================
+        public function countValidatedLessonsForCursus(Cursus $cursus): int
+    {
+        $count = 0;
+
+        foreach ($this->lessonValidations as $validation) {
+            if ($validation->getLesson()->getCursus()->getId() === $cursus->getId()) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+      
+     // =========================
+        // get next lesson to study for a given cursus
+        // =========================
+        public function getNextLessonToStudy(Cursus $cursus): ?Lesson
+    {
+        $validatedLessonIds = [];
+
+        foreach ($this->lessonValidations as $validation) {
+            $validatedLessonIds[] = $validation->getLesson()->getId();
+        }
+
+        foreach ($cursus->getLessons() as $lesson) {
+            if (!in_array($lesson->getId(), $validatedLessonIds)) {
+                return $lesson; // première leçon non validée
+            }
+        }
+
+        return null; // tout est validé
+    }
+
+    // =========================
+        // check if user has certification for a given cursus
+        // =========================
+    public function hasCertificationForCursus(Cursus $cursus): bool
+    {
+        foreach ($this->certifications as $certification) {
+            if ($certification->getCursus()->getId() === $cursus->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
 
 
    
