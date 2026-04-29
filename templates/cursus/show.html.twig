@@ -3,14 +3,19 @@
 {% block title %}{{ cursus.name }}{% endblock %}
 
 {% block body %}
-
 <div class="example-wrapper">
 
-    {# Définir les variables AVANT de les utiliser #}
     {% set total = lessons|length %}
-    {% set validated = user.countValidatedLessonsForCursus(cursus) %}
+
+    {% if app.user %}
+        {% set validated = app.user.countValidatedLessonsForCursus(cursus) %}
+        {% set next = app.user.getNextLessonToStudy(cursus) %}
+    {% else %}
+        {% set validated = 0 %}
+        {% set next = null %}
+    {% endif %}
+
     {% set percent = (validated / total * 100)|round %}
-    {% set next = user.getNextLessonToStudy(cursus) %}
 
     <h2>Leçons du cursus</h2>
 
@@ -19,11 +24,10 @@
             <li>
                 {{ lesson.name }} - {{ lesson.price }} €
 
-                {% if user and (user.hasPurchasedLesson(lesson) or user.hasPurchasedCursus(cursus)) %}
+                {% if app.user and (app.user.hasPurchasedLesson(lesson) or app.user.hasPurchasedCursus(cursus)) %}
 
-                    {# Vérifier si la leçon est validée #}
                     {% set isValidated = false %}
-                    {% for v in user.lessonValidations %}
+                    {% for v in app.user.lessonValidations %}
                         {% if v.lesson.id == lesson.id %}
                             {% set isValidated = true %}
                         {% endif %}
@@ -44,7 +48,7 @@
 
     <hr>
 
-    {% if user and user.hasPurchasedCursus(cursus) %}
+    {% if app.user and app.user.hasPurchasedCursus(cursus) %}
         <strong>Vous avez déjà acheté ce cursus.</strong><br>
 
         {% if validated == 0 %}
@@ -74,12 +78,11 @@
         <div style="background:#4caf50; width:{{ percent }}%; height:100%; border-radius:5px;"></div>
     </div>
 
-    {% if user.hasCertificationForCursus(cursus) %}
+    {% if app.user and app.user.hasCertificationForCursus(cursus) %}
         <div class="alert alert-success mt-3">
             🎓 Vous avez obtenu la certification de ce cursus !
         </div>
     {% endif %}
 
 </div>
-
 {% endblock %}

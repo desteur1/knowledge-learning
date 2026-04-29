@@ -21,6 +21,10 @@ final class PurchaseController extends AbstractController
         $user = $this->getUser();
 
         if (!$user) return $this->redirectToRoute('app_login');
+            if (!$user->isVerified()) {
+                $this->addFlash('error', 'Vous devez activer votre compte pour acheter.');
+                return $this->redirectToRoute('app_verify_notice');
+            }
 
         // Vérifier si l'utilisateur a déjà acheté ce cursus
     foreach ($user->getOrders() as $order) {
@@ -60,6 +64,11 @@ final class PurchaseController extends AbstractController
         $user = $this->getUser();
 
         if (!$user) return $this->redirectToRoute('app_login');
+        
+            if (!$user->isVerified()) {
+                $this->addFlash('error', 'Vous devez activer votre compte pour acheter.');
+                return $this->redirectToRoute('app_verify_notice');
+            }
 
         // Vérifier si l'utilisateur a déjà acheté cette leçon
     foreach ($user->getOrders() as $order) {
