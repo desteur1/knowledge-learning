@@ -15,16 +15,17 @@ class EmailVerifier
     public function __construct(
         private VerifyEmailHelperInterface $verifyEmailHelper,
         private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager,
-    ) {
-    }
+        private EntityManagerInterface $entityManager
+    ) {}
 
     public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
     {
+        //  IMPORTANT : on passe l'ID dans les paramètres de la route
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            (string) $user->getId(),
-            (string) $user->getEmail()
+            $user->getId(),
+            $user->getEmail(),
+            ['id' => $user->getId()] // ← obligatoire pour route /verify/email/{id}
         );
 
         $context = $email->getContext();
@@ -37,16 +38,30 @@ class EmailVerifier
         $this->mailer->send($email);
     }
 
-    /**
-     * @throws VerifyEmailExceptionInterface
-     */
-    public function handleEmailConfirmation(Request $request, User $user): void
+    public function handleEmailConfirmation(Request $request): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), (string) $user->getEmail());
+        // On récupère l'ID depuis la route
+        $userId = $request->attributes->get('id');
 
+        if (!$userId) {
+            throw new \LogicException('Missing user ID in verification link.');
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($userId);
+
+        if (!$user) {
+            throw new \LogicException('User not found.');
+        }
+
+        // Validation de la signature
+        $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
+            $request,
+            $userId,
+            $user->getEmail()
+        );
+
+        // Activation du compte
         $user->setIsVerified(true);
-
-        $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 }
