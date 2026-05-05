@@ -27,6 +27,14 @@
                         <a href="{{ path('app_login') }}">Connexion</a>
                         <a href="{{ path('app_register') }}">Inscription</a>
                     {% endif %}
+
+                    <a href="{{ path('app_my_courses') }}">Mes cours</a>
+
+
+                    {% if app.user %}
+                    <a href="{{ path('app_profile') }}">Mon profil</a>
+                {% endif %}
+
                 </div>
 
         </nav>

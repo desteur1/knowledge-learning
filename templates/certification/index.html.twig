@@ -18,9 +18,13 @@
                 <a href="{{ path('cursus_show', {id: cert.cursus.id}) }}">
                     Voir le cursus
                 </a>
+                <a href="{{ path('certification_download', { id: cert.id }) }}" class="btn btn-primary">
+               Télécharger en PDF
+               </a>
             </li>
         {% endfor %}
     </ul>
+    
 {% endif %}
 
 {% endblock %}

@@ -327,11 +327,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return false;
     }
+    
+     // =========================
+        // get all cursus purchased by the user
+        // =========================
+    public function getPurchasedCursus(): array
+    {
+        $courses = [];
+
+        foreach ($this->orders as $order) {
+            if ($order->getStatus() !== 'paid') continue;
+
+            foreach ($order->getOrderItems() as $item) {
+                if ($item->getCursus()) {
+                    $courses[] = $item->getCursus();
+                }
+            }
+        }
+
+        return array_unique($courses, SORT_REGULAR);
+    }
+
+    // =========================
+        // get all lessons purchased by the user
+        // =========================
+    public function getPurchasedLessons(): array
+    {
+        $lessons = [];
+
+        foreach ($this->orders as $order) {
+            if ($order->getStatus() !== 'paid') continue;
+
+            foreach ($order->getOrderItems() as $item) {
+                if ($item->getLesson()) {
+                    $lessons[] = $item->getLesson();
+                }
+            }
+        }
+
+        return array_unique($lessons, SORT_REGULAR);
+    }
+ 
 
 
-
-
-
-   
 
 }

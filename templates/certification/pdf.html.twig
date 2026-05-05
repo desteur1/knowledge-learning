@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            text-align: center;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        .certificate-container {
+            border: 6px double #333;
+            padding: 40px;
+            background: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 20px 0 5px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .signature {
+            margin-top: 40px;
+            font-size: 16px;
+        }
+
+        .line {
+            margin-top: 5px;
+            border-top: 1px solid #000;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="certificate-container">
+
+    <h1>Certification Officielle</h1>
+
+    <p class="subtitle">Ce document certifie que :</p>
+
+    <h2>{{ user.email|split('@')[0] }}</h2>
+
+    <p class="subtitle">a complété avec succès le cursus :</p>
+
+    <h3>{{ certification.cursus.name }}</h3>
+
+    <p class="subtitle">
+        Date d’obtention : {{ certification.obtainedAt|date('d/m/Y') }}
+    </p>
+
+    <div class="signature">
+        Signature :
+        <div class="line"></div>
+    </div>
+
+</div>
+
+</body>
+</html>

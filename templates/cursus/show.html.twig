@@ -49,8 +49,6 @@
     <hr>
 
     {% if app.user and app.user.hasPurchasedCursus(cursus) %}
-        <strong>Vous avez déjà acheté ce cursus.</strong><br>
-
         {% if validated == 0 %}
             <a href="{{ path('lesson_show', {id: lessons|first.id}) }}">
                 Commencer le cursus
