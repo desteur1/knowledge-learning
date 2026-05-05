@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes leçons achetées{% endblock %}
+
+{% block body %}
+<div class="lessons-container">
+
+    <h1>Mes leçons achetées</h1>
+
+    <div class="subnav">
+        <a href="{{ path('app_my_courses') }}">Mes cursus</a>
+        <a href="{{ path('app_my_lessons') }}"  class="active">Mes leçons achetées</a>
+    </div>
+
+    {% if lessons is empty %}
+        <p>Vous n'avez encore acheté aucune leçon.</p>
+    {% else %}
+        <div class="lessons-list">
+            {% for lesson in lessons %}
+                <div class="lesson-card">
+                    <h2>{{ lesson.name }}</h2>
+
+                    <p>
+                        Cursus : 
+                        <strong>{{ lesson.cursus.name }}</strong>
+                    </p>
+
+                    <p>Prix : {{ lesson.price }} €</p>
+
+                    <a href="{{ path('lesson_show', { id: lesson.id }) }}" class="btn btn-primary">
+                        Accéder à la leçon
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.lessons-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.subnav a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.subnav a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.lessons-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.lesson-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+</style>
+{% endblock %}
