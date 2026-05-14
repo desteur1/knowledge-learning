@@ -25,12 +25,18 @@ class Lesson
     #[ORM\Column(length: 255)]
     private ?string $videoUrl = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $videoPath = null;
+
     #[ORM\Column]
-    private ?float $price = null;
+    private ?int $price = null; // price in cents
 
     #[ORM\ManyToOne (inversedBy: 'lessons')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cursus $cursus = null;
+
+    #[ORM\Column(type: 'integer')]
+    private int $position = 0;
 
     /**
      * @var Collection<int, OrderItem>
@@ -91,12 +97,24 @@ class Lesson
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getVideoPath(): ?string
+    {
+        return $this->videoPath;
+    }
+
+    public function setVideoPath(?string $videoPath): static
+    {
+        $this->videoPath = $videoPath;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(int $price): static
     {
         $this->price = $price;
 
@@ -110,10 +128,35 @@ class Lesson
 
     public function setCursus(?Cursus $cursus): static
     {
+         // Avoid infinite loop
+        if ($this->cursus === $cursus) {
+            return $this;
+        }
+       // Remove from old cursus
+        if ($this->cursus !== null) {
+            $this->cursus->getLessons()->removeElement($this);
+        }
+
         $this->cursus = $cursus;
+       // Ensure the bidirectional relationship is maintained
+        if ($cursus !== null && !$cursus->getLessons()->contains($this)) {
+            $cursus->getLessons()->add($this);
+        }
 
         return $this;
     }
+
+     public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): static
+    {
+        $this->position = $position;
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, OrderItem>
@@ -174,4 +217,41 @@ class Lesson
 
         return $this;
     }
+
+    // =========================
+        // methods to manage the bidirectional relationship with Cursus
+        // =========================
+     public function getNextLesson(): ?Lesson
+    {
+        $lessons = $this->getCursus()->getLessonsOrdered();
+
+        foreach ($lessons as $index => $lesson) {
+            if ($lesson->getId() === $this->getId()) {
+                return $lessons[$index + 1] ?? null;
+            }
+        }
+
+        return null;
+    }
+
+    public function getPreviousLesson(): ?Lesson
+    {
+        $lessons = $this->getCursus()->getLessonsOrdered();
+
+        foreach ($lessons as $index => $lesson) {
+            if ($lesson->getId() === $this->getId()) {
+                return $lessons[$index - 1] ?? null;
+            }
+        }
+
+        return null;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
+    
+
+
 }

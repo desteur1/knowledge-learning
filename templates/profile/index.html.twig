@@ -30,7 +30,12 @@
             {% endif %}
         </p>
 
-        <p><strong>Rôle :</strong> {{ user.role.name }}</p>
+        {% if 'ROLE_ADMIN' in user.roles %}
+            <p><strong>Rôle :</strong> Administrateur</p>
+        {% else %}
+            <p><strong>Rôle :</strong> Utilisateur</p>
+        {% endif %}
+
 
         <a href="{{ path('app_change_password') }}" class="btn">Changer mon mot de passe</a>
     </div>

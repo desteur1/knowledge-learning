@@ -24,7 +24,7 @@
                         {{ cursus.lessons|length }} leçons dans ce cursus.
                     </p>
 
-                    {% set validated = app.user.countValidatedLessonsForCursus(cursus) %}
+                    {% set validated = app.user.countUserValidatedLessonsForCursus(cursus) %}
                     {% set total = cursus.lessons|length %}
 
                     {% if validated == total %}

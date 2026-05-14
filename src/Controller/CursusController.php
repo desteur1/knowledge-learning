@@ -21,10 +21,21 @@ final class CursusController extends AbstractController
     #[Route('/cursus/{id}', name: 'cursus_show')]
     public function show(Cursus $cursus): Response
     {
+        $user = $this->getUser();
+
+        // Calcul du prix restant
+        $remainingPrice = null;
+
+        if ($user) {
+            $remainingPrice = $user->calculateRemainingPriceForCursus($cursus);
+        }
+
+
         return $this->render('cursus/show.html.twig', [
             'cursus' => $cursus,
             'lessons' => $cursus->getLessons(),
             'user' => $this->getUser(),
+            'remainingPrice' => $remainingPrice,
         ]);
     }
 }

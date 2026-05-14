@@ -23,6 +23,10 @@ class OrderItem
     #[ORM\ManyToOne]
     private ?Lesson $lesson = null;
 
+    #[ORM\Column]
+    private ?int $price = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,4 +64,29 @@ class OrderItem
         $this->lesson = $lesson;
         return $this;
     }
+
+     public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): static
+    {
+        $this->price = $price;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        if ($this->lesson) {
+            return 'Leçon : ' . $this->lesson->getName();
+        }
+
+        if ($this->cursus) {
+            return 'Cursus : ' . $this->cursus->getName();
+        }
+
+        return 'Article #' . $this->id;
+    }
+
 }

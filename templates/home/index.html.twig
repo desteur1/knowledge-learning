@@ -19,7 +19,7 @@
                 {% for cursus in theme.cursuses %}
                     <li>
                         <a href="{{ path('cursus_show', {id: cursus.id}) }}">
-                            {{ cursus.name }} - {{ cursus.price }} €
+                            {{ cursus.name }} - {{ cursus.dynamicPrice / 100 }} €
                         </a>
                     </li>
                 {% endfor %}

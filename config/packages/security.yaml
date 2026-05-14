@@ -45,12 +45,14 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # Autoriser l'inscription, la connexion et la vérification
+        # Autorise access to registration, login, and verification URLs for all users (including unverified ones)
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/verify, roles: PUBLIC_ACCESS }
+        # Autorise access to admin URLs only for users with ROLE_ADMIN
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
-        #  Bloquer tout le reste si l'utilisateur n'est pas vérifié
+        #  Block access to all other URLs for unverified users
         - { path: ^/, roles: ROLE_USER }
 
 when@test:

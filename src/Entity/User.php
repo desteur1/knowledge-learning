@@ -43,9 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\Column]
     // private bool $isActive = true;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Role $role = null;
 
     /**
      * @var Collection<int, Order>
@@ -169,16 +166,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //     return $this;
     // }
 
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(?Role $role): static
-    {
-        $this->role = $role;
-        return $this;
-    }
 
     // =========================
     // ORDERS
@@ -248,7 +235,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // =========================
         // view lessons already purchased by the user
         // =========================
-        public function hasPurchasedLesson(Lesson $lesson): bool
+        public function userHasPurchasedLesson(Lesson $lesson): bool
     {
         foreach ($this->getOrders() as $order) {
             if ($order->getStatus() !== 'paid') continue;
@@ -264,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
          // =========================
         // view courses already purchased by the user
         // =========================
-       public function hasPurchasedCursus(Cursus $cursus): bool
+       public function userHasPurchasedCursus(Cursus $cursus): bool
     {
         foreach ($this->getOrders() as $order) {
             if ($order->getStatus() !== 'paid') continue;
@@ -282,23 +269,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       // =========================
         // count validated lessons for a given cursus
         // =========================
-        public function countValidatedLessonsForCursus(Cursus $cursus): int
+    public function countUserValidatedLessonsForCursus(Cursus $cursus): int
     {
-        $count = 0;
-
-        foreach ($this->lessonValidations as $validation) {
-            if ($validation->getLesson()->getCursus()->getId() === $cursus->getId()) {
-                $count++;
+        return $cursus->getLessons()->filter(function ($lesson) {
+            foreach ($this->lessonValidations as $validation) {
+                if ($validation->getLesson()->getId() === $lesson->getId()) {
+                    return true;
+                }
             }
-        }
-
-        return $count;
+            return false;
+        })->count();
     }
+
       
      // =========================
         // get next lesson to study for a given cursus
         // =========================
-        public function getNextLessonToStudy(Cursus $cursus): ?Lesson
+        public function findNextLessonToStudy(Cursus $cursus): ?Lesson
     {
         $validatedLessonIds = [];
 
@@ -318,7 +305,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // =========================
         // check if user has certification for a given cursus
         // =========================
-    public function hasCertificationForCursus(Cursus $cursus): bool
+    public function userHasCertificationForCursus(Cursus $cursus): bool
     {
         foreach ($this->certifications as $certification) {
             if ($certification->getCursus()->getId() === $cursus->getId()) {
@@ -367,8 +354,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($lessons, SORT_REGULAR);
     }
- 
 
+     // =========================
+        // calculate remaining price to pay for a given cursus (taking into account already purchased lessons)
+        // =========================
+    public function calculateRemainingPriceForCursus(Cursus $cursus): float
+    {
+        $remaining = $cursus->getDynamicPrice();
 
+        foreach ($this->getOrders() as $order) {
+            if ($order->getStatus() !== 'paid') continue;
+
+            foreach ($order->getOrderItems() as $item) {
+                if ($item->getLesson() && $item->getLesson()->getCursus() === $cursus) {
+                    $remaining -= $item->getLesson()->getPrice();
+                }
+            }
+        }
+
+        return max(0, $remaining);
+    }
+
+    public function __toString(): string
+    {
+        return $this->email ?? '';
+    }
 
 }
