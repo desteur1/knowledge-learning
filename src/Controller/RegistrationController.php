@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Role;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,9 +36,9 @@ class RegistrationController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            //  AJOUT OBLIGATOIRE : attribuer un rôle par défaut
-            $defaultRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_CLIENT']);
-            $user->setRole($defaultRole);
+            //  add default role
+            $user->setRoles(['ROLE_CLIENT']);
+
 
             $entityManager->persist($user);
             $entityManager->flush();

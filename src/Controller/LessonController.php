@@ -12,130 +12,105 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class LessonController extends AbstractController
 {
-    #[Route('/lesson', name: 'app_lesson')]
-    public function index(): Response
-    {
-        return $this->render('lesson/index.html.twig', [
-            'controller_name' => 'LessonController',
-        ]);
-    }
-
     #[Route('/lesson/{id}', name: 'lesson_show')]
-    public function show(Lesson $lesson): Response
+    public function show(Lesson $lesson, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
+        // access control : only users who bought the cursus or the lesson can access
         $hasAccess = false;
 
         foreach ($user->getOrders() as $order) {
-            if ($order->getStatus() !== 'paid') {
-                continue;
-            }
+            if ($order->getStatus() !== 'paid') continue;
 
             foreach ($order->getOrderItems() as $item) {
-
-                // Buy lesson
                 if ($item->getLesson() && $item->getLesson()->getId() === $lesson->getId()) {
                     $hasAccess = true;
-                    break;
                 }
-
-                // Buy course
                 if ($item->getCursus() && $item->getCursus()->getId() === $lesson->getCursus()->getId()) {
                     $hasAccess = true;
-                    break;
                 }
             }
-
-            if ($hasAccess) {
-            break;
-           }
         }
 
         if (!$hasAccess) {
-            throw $this->createAccessDeniedException('You must purchase this lesson.');
+            throw $this->createAccessDeniedException("Vous n'avez pas accès à cette leçon.");
         }
 
+        // create certification if all lessons are validated
+        $validatedCount = $user->countUserValidatedLessonsForCursus($lesson->getCursus());
+        $total = count($lesson->getCursus()->getLessonsOrdered());
+
         return $this->render('lesson/show.html.twig', [
-            'lesson' => $lesson,
-            'user' => $user,
+            'lesson'         => $lesson,
+            'user'           => $user,
+            'validatedCount' => $validatedCount,
+            'total'          => $total,
         ]);
     }
 
-    #[Route('/lesson/{id}/validate', name: 'lesson_validate')]
-public function validate(Lesson $lesson, EntityManagerInterface $em): Response
-{
-    $user = $this->getUser();
-    if (!$user) {
-        return $this->redirectToRoute('app_login');
-    }
-
-    // Vérifier accès
-    $hasAccess = false;
-    foreach ($user->getOrders() as $order) {
-        if ($order->getStatus() !== 'paid') continue;
-
-        foreach ($order->getOrderItems() as $item) {
-            if ($item->getLesson() && $item->getLesson()->getId() === $lesson->getId()) {
-                $hasAccess = true;
-            }
-            if ($item->getCursus() && $item->getCursus()->getId() === $lesson->getCursus()->getId()) {
-                $hasAccess = true;
+    #[Route('/lesson/{id}/next-locked', name: 'lesson_next_locked')]
+    public function nextLocked(Lesson $lesson, EntityManagerInterface $em): Response
+    {
+        $user   = $this->getUser();
+        $cursus = $lesson->getCursus();
+ 
+        // validate current lesson if not already validated
+        $alreadyValidated = false;
+        foreach ($user->getLessonValidations() as $v) {
+            if ($v->getLesson()->getId() === $lesson->getId()) {
+                $alreadyValidated = true;
+                break;
             }
         }
-    }
 
-    if (!$hasAccess) {
-        throw $this->createAccessDeniedException("Vous n'avez pas accès à cette leçon.");
-    }
+        if (!$alreadyValidated) {
+            $validation = new LessonValidation();
+            $validation->setUser($user);
+            $validation->setLesson($lesson);
+            $validation->setValidatedAt(new \DateTimeImmutable());
 
-    // Vérifier si déjà validée
-    foreach ($user->getLessonValidations() as $validation) {
-        if ($validation->getLesson()->getId() === $lesson->getId()) {
-            $this->addFlash('warning', 'Leçon déjà validée.');
-            return $this->redirectToRoute('lesson_show', ['id' => $lesson->getId()]);
+            $em->persist($validation);
+            $em->flush();
+
+            $em->refresh($user); // pour mettre à jour les collections et éviter les incohérences dans la suite du code
         }
+
+        // validation progression cursus
+        $validatedCount = $user->countUserValidatedLessonsForCursus($cursus);
+        $total          = count($cursus->getLessonsOrdered());
+
+        // 3. Certification if all lessons validated and no cert yet
+        if ($validatedCount == $total && !$user->userHasCertificationForCursus($cursus)) {
+            $cert = new Certification();
+            $cert->setUser($user);
+            $cert->setCursus($cursus);
+            $cert->setObtainedAt(new \DateTimeImmutable());
+
+            $em->persist($cert);
+            $em->flush();
+        }
+
+        // 4. Navigation : if user has access to next lesson, go to it, else go back to cursus page
+        if ($user->userHasPurchasedCursus($cursus)) {
+            $next = $lesson->getNextLesson();
+
+            if ($next) {
+                return $this->redirectToRoute('lesson_show', [
+                    'id' => $next->getId(),
+                ]);
+            }
+
+            return $this->redirectToRoute('cursus_show', [
+                'id' => $cursus->getId(),
+            ]);
+        }
+
+        return $this->redirectToRoute('cursus_show', [
+            'id' => $cursus->getId(),
+        ]);
     }
-
-    // Créer la validation
-    $validation = new LessonValidation();
-    $validation->setUser($user);
-    $validation->setLesson($lesson);
-    $validation->setValidatedAt(new \DateTimeImmutable());
-
-    $em->persist($validation);
-    $em->flush();
-     
-
-    // IMPORTANT : to refresh user entity to get the latest lesson validations
-     $em->refresh($user);
-    // verify if all lessons of the cursus are validated to grant certification
-    $cursus = $lesson->getCursus();
-    $totalLessons = $cursus->getLessons()->count();
-    $validatedLessons = $user->countValidatedLessonsForCursus($cursus);
-
-if ($validatedLessons === $totalLessons && !$user->hasCertificationForCursus($cursus)) {
-    $certification = new Certification();
-    $certification->setUser($user);
-    $certification->setCursus($cursus);
-    $certification->setObtainedAt(new \DateTimeImmutable());
-
-    $em->persist($certification);
-    $em->flush();
-
-    $this->addFlash('success', '🎓 Félicitations ! Vous avez obtenu la certification du cursus.');
-}
-
-
-    $this->addFlash('success', 'Leçon validée avec succès !');
-
-    return $this->redirectToRoute('cursus_show', [
-    'id' => $lesson->getCursus()->getId()
-]);
-
-}
-
 }

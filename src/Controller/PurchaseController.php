@@ -19,18 +19,20 @@ final class PurchaseController extends AbstractController
     public function purchaseCursus(Cursus $cursus, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
-
+         // check if user is logged in, if not redirect to login page
         if (!$user) return $this->redirectToRoute('app_login');
-            if (!$user->isVerified()) {
+
+        if (!$user->isVerified()) {
                 $this->addFlash('error', 'Vous devez activer votre compte pour acheter.');
                 return $this->redirectToRoute('app_verify_notice');
             }
 
-        // Vérifier si l'utilisateur a déjà acheté ce cursus
-    foreach ($user->getOrders() as $order) {
-        if ($order->getStatus() !== 'paid') continue;
+        // check if user already bought this cursus
+       foreach ($user->getOrders() as $order) {
+         if ($order->getStatus() !== 'paid') continue;
 
-        foreach ($order->getOrderItems() as $item) {
+         // check if order contains this cursus
+         foreach ($order->getOrderItems() as $item) {
             if ($item->getCursus() && $item->getCursus()->getId() === $cursus->getId()) {
                 $this->addFlash('warning', 'Vous avez déjà acheté ce cursus.');
                 return $this->redirectToRoute('cursus_show', ['id' => $cursus->getId()]);
@@ -47,13 +49,14 @@ final class PurchaseController extends AbstractController
         $item = new OrderItem();
         $item->setOrder($order);
         $item->setCursus($cursus);
-
+        $item->setPrice($cursus->getDynamicPrice()); // Set the price from the cursus
+        
         $em->persist($order);
         $em->persist($item);
         $em->flush();
 
         //  confirmation message
-    $this->addFlash('success', 'Votre achat a bien été enregistré !');
+        $this->addFlash('success', 'Votre achat a bien été enregistré !');
 
         return $this->redirectToRoute('cursus_show', ['id' => $cursus->getId()]);
     }
@@ -65,16 +68,16 @@ final class PurchaseController extends AbstractController
 
         if (!$user) return $this->redirectToRoute('app_login');
         
-            if (!$user->isVerified()) {
+        if (!$user->isVerified()) {
                 $this->addFlash('error', 'Vous devez activer votre compte pour acheter.');
                 return $this->redirectToRoute('app_verify_notice');
             }
 
-        // Vérifier si l'utilisateur a déjà acheté cette leçon
-    foreach ($user->getOrders() as $order) {
-        if ($order->getStatus() !== 'paid') continue;
+        // check if user already bought this lesson
+        foreach ($user->getOrders() as $order) {
+          if ($order->getStatus() !== 'paid') continue;
 
-        foreach ($order->getOrderItems() as $item) {
+          foreach ($order->getOrderItems() as $item) {
             if ($item->getLesson() && $item->getLesson()->getId() === $lesson->getId()) {
                 $this->addFlash('warning', 'Vous avez déjà acheté cette leçon.');
                 return $this->redirectToRoute('lesson_show', ['id' => $lesson->getId()]);
@@ -90,12 +93,14 @@ final class PurchaseController extends AbstractController
         $item->setOrder($order);
         $item->setLesson($lesson);
 
+        $item->setPrice($lesson->getPrice()); // Set the price from the 
+
         $em->persist($order);
         $em->persist($item);
         $em->flush();
 
 
-      $this->addFlash('success', 'Votre achat a bien été enregistré !');
+        $this->addFlash('success', 'Votre achat a bien été enregistré !');
 
         return $this->redirectToRoute('lesson_show', ['id' => $lesson->getId()]);
     }

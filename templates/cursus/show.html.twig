@@ -8,23 +8,28 @@
     {% set total = lessons|length %}
 
     {% if app.user %}
-        {% set validated = app.user.countValidatedLessonsForCursus(cursus) %}
-        {% set next = app.user.getNextLessonToStudy(cursus) %}
+        {% set validated = app.user.countUserValidatedLessonsForCursus(cursus) %}
+        {% set next = app.user.findNextLessonToStudy(cursus) %}
     {% else %}
         {% set validated = 0 %}
         {% set next = null %}
     {% endif %}
 
-    {% set percent = (validated / total * 100)|round %}
+    {% if total == 0 %}
+    {% set percent = 0 %}
+    <p>Ce cursus ne contient encore aucune leçon.</p>
+    {% else %}
+        {% set percent = (validated / total * 100)|round %}
+    {% endif %}
 
     <h2>Leçons du cursus</h2>
 
     <ul>
         {% for lesson in lessons %}
             <li>
-                {{ lesson.name }} - {{ lesson.price }} €
+                {{ lesson.name }} - {{ lesson.price / 100 }} €
 
-                {% if app.user and (app.user.hasPurchasedLesson(lesson) or app.user.hasPurchasedCursus(cursus)) %}
+                {% if app.user and (app.user.userHasPurchasedLesson(lesson) or app.user.userHasPurchasedCursus(cursus)) %}
 
                     {% set isValidated = false %}
                     {% for v in app.user.lessonValidations %}
@@ -34,10 +39,12 @@
                     {% endfor %}
 
                     {% if isValidated %}
-                        <span style="color: green; font-weight: bold;">Validée ✔</span>
-                    {% else %}
-                        <a href="{{ path('lesson_show', {id: lesson.id}) }}">Accéder</a>
-                    {% endif %}
+                    <span style="color: green; font-weight: bold;">Validée ✔</span>
+                    <a href="{{ path('lesson_show', {id: lesson.id}) }}" class="ms-2">Accéder</a>
+                {% else %}
+                    <a href="{{ path('lesson_show', {id: lesson.id}) }}">Accéder</a>
+                {% endif %}
+
 
                 {% else %}
                     <a href="{{ path('purchase_lesson', {id: lesson.id}) }}">Acheter</a>
@@ -48,7 +55,7 @@
 
     <hr>
 
-    {% if app.user and app.user.hasPurchasedCursus(cursus) %}
+    {% if app.user and app.user.userHasPurchasedCursus(cursus) %}
         {% if validated == 0 %}
             <a href="{{ path('lesson_show', {id: lessons|first.id}) }}">
                 Commencer le cursus
@@ -58,15 +65,15 @@
             <a href="{{ path('lesson_show', {id: next.id}) }}" class="btn btn-primary mt-3">
                 Continuer le cursus
             </a>
-
-        {% else %}
-            <strong>🎉 Toutes les leçons sont validées !</strong>
         {% endif %}
 
     {% else %}
-        <a href="{{ path('purchase_cursus', {id: cursus.id}) }}">
-            Acheter ce cursus ({{ cursus.price }} €)
-        </a>
+            {% if remainingPrice > 0 %}
+            <a href="{{ path('purchase_cursus', {id: cursus.id}) }}">
+                Acheter ce cursus ({{ remainingPrice / 100 }} €)
+            </a>
+        {% endif %}
+
     {% endif %}
 
     <h3>Progression du cursus</h3>
@@ -76,7 +83,7 @@
         <div style="background:#4caf50; width:{{ percent }}%; height:100%; border-radius:5px;"></div>
     </div>
 
-    {% if app.user and app.user.hasCertificationForCursus(cursus) %}
+    {% if app.user and app.user.userHasCertificationForCursus(cursus) %}
         <div class="alert alert-success mt-3">
             🎓 Vous avez obtenu la certification de ce cursus !
         </div>
