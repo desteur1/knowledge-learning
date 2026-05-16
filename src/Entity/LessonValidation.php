@@ -6,12 +6,8 @@ use App\Repository\LessonValidationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LessonValidationRepository::class)]
-#[ORM\Table(
-    name: 'lesson_validation',
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(name: 'unique_user_lesson', columns: ['user_id', 'lesson_id'])
-    ]
-)]
+#[ORM\Table(name: 'lesson_validation')]
+#[ORM\UniqueConstraint(name: 'unique_user_lesson', columns: ['user_id', 'lesson_id'])]
 class LessonValidation
 {
     #[ORM\Id]

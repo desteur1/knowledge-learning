@@ -96,6 +96,9 @@ class Cursus
         $discountPerLesson = 200;
         $discount = count($lessons) * $discountPerLesson;
 
+        // cap the discount to 1000 cents (max 10€)
+       $discount = min($discount, 1000);
+
         return max(0, $total - $discount);
     }
 

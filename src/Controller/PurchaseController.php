@@ -47,12 +47,13 @@ final class PurchaseController extends AbstractController
         $order->setStatus('paid'); // SIMULATION
 
         $item = new OrderItem();
-        $item->setOrder($order);
+        // $item->setOrder($order);
         $item->setCursus($cursus);
         $item->setPrice($cursus->getDynamicPrice()); // Set the price from the cursus
+
+        $order->addOrderItem($item);
         
         $em->persist($order);
-        $em->persist($item);
         $em->flush();
 
         //  confirmation message
@@ -90,13 +91,13 @@ final class PurchaseController extends AbstractController
         $order->setStatus('paid'); // SIMULATION
 
         $item = new OrderItem();
-        $item->setOrder($order);
+        // $item->setOrder($order);
         $item->setLesson($lesson);
-
         $item->setPrice($lesson->getPrice()); // Set the price from the 
 
+        $order->addOrderItem($item);
+
         $em->persist($order);
-        $em->persist($item);
         $em->flush();
 
 

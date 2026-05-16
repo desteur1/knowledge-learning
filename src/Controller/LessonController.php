@@ -19,22 +19,13 @@ final class LessonController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+  
+        // check access : user must have purchased the lesson or the cursus
+       $hasAccess =
+        $user->userHasPurchasedLesson($lesson)
+        || $user->userHasPurchasedCursus($lesson->getCursus());
 
-        // access control : only users who bought the cursus or the lesson can access
-        $hasAccess = false;
-
-        foreach ($user->getOrders() as $order) {
-            if ($order->getStatus() !== 'paid') continue;
-
-            foreach ($order->getOrderItems() as $item) {
-                if ($item->getLesson() && $item->getLesson()->getId() === $lesson->getId()) {
-                    $hasAccess = true;
-                }
-                if ($item->getCursus() && $item->getCursus()->getId() === $lesson->getCursus()->getId()) {
-                    $hasAccess = true;
-                }
-            }
-        }
+        
 
         if (!$hasAccess) {
             throw $this->createAccessDeniedException("Vous n'avez pas accès à cette leçon.");

@@ -15,6 +15,7 @@ use App\Controller\Admin\CertificationCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,11 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Knowledge Learning');
+    }
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            ->setTimezone('Europe/Paris');
     }
 
     public function configureMenuItems(): iterable
