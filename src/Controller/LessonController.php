@@ -2,36 +2,30 @@
 
 namespace App\Controller;
 
-use App\Entity\LessonValidation;
 use App\Entity\Lesson;
-use App\Entity\Certification;
+use App\Service\LessonProgressService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
 
 final class LessonController extends AbstractController
 {
     #[Route('/lesson/{id}', name: 'lesson_show')]
-    public function show(Lesson $lesson, EntityManagerInterface $em): Response
+    public function show(Lesson $lesson): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-  
-        // check access : user must have purchased the lesson or the cursus
-       $hasAccess =
-        $user->userHasPurchasedLesson($lesson)
-        || $user->userHasPurchasedCursus($lesson->getCursus());
 
-        
+        $hasAccess =
+            $user->userHasPurchasedLesson($lesson) ||
+            $user->userHasPurchasedCursus($lesson->getCursus());
 
         if (!$hasAccess) {
             throw $this->createAccessDeniedException("Vous n'avez pas accès à cette leçon.");
         }
 
-        // create certification if all lessons are validated
         $validatedCount = $user->countUserValidatedLessonsForCursus($lesson->getCursus());
         $total = count($lesson->getCursus()->getLessonsOrdered());
 
@@ -44,64 +38,35 @@ final class LessonController extends AbstractController
     }
 
     #[Route('/lesson/{id}/next-locked', name: 'lesson_next_locked')]
-    public function nextLocked(Lesson $lesson, EntityManagerInterface $em): Response
+    public function nextLocked(Lesson $lesson, LessonProgressService $progress): Response
     {
-        $user   = $this->getUser();
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $cursus = $lesson->getCursus();
  
-        // validate current lesson if not already validated
-        $alreadyValidated = false;
-        foreach ($user->getLessonValidations() as $v) {
-            if ($v->getLesson()->getId() === $lesson->getId()) {
-                $alreadyValidated = true;
-                break;
-            }
+        // Access control: user must have access to either the lesson or the cursus
+        if (
+            !$user->userHasPurchasedLesson($lesson) &&
+            !$user->userHasPurchasedCursus($cursus)
+        ) {
+            throw $this->createAccessDeniedException("Vous n'avez pas accès à cette leçon.");
         }
 
-        if (!$alreadyValidated) {
-            $validation = new LessonValidation();
-            $validation->setUser($user);
-            $validation->setLesson($lesson);
-            $validation->setValidatedAt(new \DateTimeImmutable());
+        // Validate lesson
+        $progress->validateLesson($user, $lesson);
 
-            $em->persist($validation);
-            $em->flush();
+        // Check certification
+        $progress->checkCertification($user, $lesson);
 
-            $em->refresh($user); // pour mettre à jour les collections et éviter les incohérences dans la suite du code
+        // Navigation
+        $next = $lesson->getNextLesson();
+        if ($next) {
+            return $this->redirectToRoute('lesson_show', ['id' => $next->getId()]);
         }
 
-        // validation progression cursus
-        $validatedCount = $user->countUserValidatedLessonsForCursus($cursus);
-        $total          = count($cursus->getLessonsOrdered());
-
-        // 3. Certification if all lessons validated and no cert yet
-        if ($validatedCount == $total && !$user->userHasCertificationForCursus($cursus)) {
-            $cert = new Certification();
-            $cert->setUser($user);
-            $cert->setCursus($cursus);
-            $cert->setObtainedAt(new \DateTimeImmutable());
-
-            $em->persist($cert);
-            $em->flush();
-        }
-
-        // 4. Navigation : if user has access to next lesson, go to it, else go back to cursus page
-        if ($user->userHasPurchasedCursus($cursus)) {
-            $next = $lesson->getNextLesson();
-
-            if ($next) {
-                return $this->redirectToRoute('lesson_show', [
-                    'id' => $next->getId(),
-                ]);
-            }
-
-            return $this->redirectToRoute('cursus_show', [
-                'id' => $cursus->getId(),
-            ]);
-        }
-
-        return $this->redirectToRoute('cursus_show', [
-            'id' => $cursus->getId(),
-        ]);
+        return $this->redirectToRoute('cursus_show', ['id' => $cursus->getId()]);
     }
 }

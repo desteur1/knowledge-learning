@@ -22,10 +22,10 @@ class MyCoursesController extends AbstractController
 
         // filter unfinished courses first
         usort($purchasedCourses, function($a, $b) use ($user) {
-            $va = $user->countValidatedLessonsForCursus($a);
+            $va = $user->countUserValidatedLessonsForCursus($a);
             $ta = count($a->getLessons());
 
-            $vb = $user->countValidatedLessonsForCursus($b);
+            $vb = $user->countUserValidatedLessonsForCursus($b);
             $tb = count($b->getLessons());
 
             // prioritize unfinished courses 

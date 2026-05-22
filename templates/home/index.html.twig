@@ -1,27 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/styles/home.css') }}">
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<h1>Liste des thèmes</h1>
 
-<ul>
+<h1 class="theme-title">Liste des thèmes</h1>
+
+<ul class="theme-list">
     {% for theme in themes %}
-        <li>
-            {{ theme.name }}
+        <li class="theme-block">
+            <h2 class="theme-name">{{ theme.name }}</h2>
 
-            <ul>
+            <ul class="cursus-list">
                 {% for cursus in theme.cursuses %}
-                    <li>
-                        <a href="{{ path('cursus_show', {id: cursus.id}) }}">
-                            {{ cursus.name }} - {{ cursus.dynamicPrice / 100 }} €
-                        </a>
-                    </li>
+                  <li class="cursus-item">
+                    <a href="{{ path('cursus_show', {id: cursus.id}) }}">
+                        <div class="cursus-card">
+                        <span class="cursus-title">{{ cursus.name }}</span>
+                        <span class="cursus-price">{{ cursus.dynamicPrice / 100 }} €</span>
+                        </div>
+                    </a>
+                </li>
+
                 {% endfor %}
             </ul>
 
