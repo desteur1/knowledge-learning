@@ -1,85 +1,96 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/styles/lesson_show.css') }}">
+{% endblock %}
+
 {% block body %}
+<div class="lesson-container">
 
-<a href="{{ path('cursus_show', { id: lesson.cursus.id }) }}" class="btn btn-outline-secondary mb-3">
-    ← Retour au cursus
-</a>
-
-<h1>{{ lesson.name }}</h1>
-
-<p>Prix : {{ lesson.price / 100 }} €</p>
-
-<p>{{ lesson.content }}</p>
-
-{# --- VIDEO --- #}
-{% if lesson.videoUrl %}
-    {% set youtubeId = lesson.videoUrl|replace({'https://www.youtube.com/watch?v=': '', 'https://youtu.be/': ''})|split('&')[0] %}
-    <iframe width="600" height="340"
-            src="https://www.youtube.com/embed/{{ youtubeId }}"
-            frameborder="0"
-            allowfullscreen>
-    </iframe>
-
-{% elseif lesson.videoPath %}
-    <video controls width="600">
-        <source src="{{ asset('uploads/videos/' ~ lesson.videoPath) }}" type="video/mp4">
-    </video>
-
-{% else %}
-    <p><em>Aucune vidéo disponible pour cette leçon.</em></p>
-{% endif %}
-
-<hr>
-
-{# --- BADGE VALIDATION --- #}
-{% set isValidated = false %}
-{% for v in user.lessonValidations %}
-    {% if v.lesson.id == lesson.id %}
-        {% set isValidated = true %}
-    {% endif %}
-{% endfor %}
-
-{% if isValidated %}
-    <span class="badge bg-success">Leçon terminée ✔</span>
-{% endif %}
-
-<hr>
-
-{# --- CALCUL : combien de leçons achetées dans ce cursus ? --- #}
-{% set purchasedCount = 0 %}
-{% for order in user.orders %}
-    {% if order.status == 'paid' %}
-        {% for item in order.orderItems %}
-            {% if item.cursus and item.cursus.id == lesson.cursus.id %}
-                {% set purchasedCount = lesson.cursus.lessons|length %}
-            {% endif %}
-            {% if item.lesson and item.lesson.cursus.id == lesson.cursus.id %}
-                {% set purchasedCount = purchasedCount + 1 %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-{% endfor %}
-
-{# --- NAVIGATION --- #}
-<div class="lesson-navigation" style="margin-top: 30px; display: flex; justify-content: space-between;">
-
-    {# Précédent : seulement si plusieurs leçons achetées #}
-    {% set prev = lesson.getPreviousLesson() %}
-
-    {% if prev and purchasedCount > 1 %}
-        <a href="{{ path('lesson_show', { id: prev.id }) }}" class="btn btn-secondary">
-            ← Leçon précédente
-        </a>
-    {% else %}
-        <span></span>
-    {% endif %}
-
-    {# Suivant : toujours la même route pour valider + naviguer #}
-    <a href="{{ path('lesson_next_locked', { id: lesson.id }) }}" class="btn btn-primary">
-        Leçon suivante →
+    <a href="{{ path('cursus_show', { id: lesson.cursus.id }) }}" class="btn btn-secondary">
+        ← Retour au cursus
     </a>
 
-</div>
+    <h1>{{ lesson.name }}</h1>
 
+    <div class="lesson-meta">
+        Prix : {{ lesson.price / 100 }} €
+    </div>
+
+    <div class="lesson-content">
+
+        <div class="lesson-video">
+            {% if lesson.videoUrl %}
+                {% set youtubeId = lesson.videoUrl|replace({'https://www.youtube.com/watch?v=': '', 'https://youtu.be/': ''})|split('&')[0] %}
+                <iframe 
+                    src="https://www.youtube.com/embed/{{ youtubeId }}" 
+                    allowfullscreen>
+                </iframe>
+
+            {% elseif lesson.videoPath %}
+                <video controls>
+                    <source src="{{ asset('uploads/videos/' ~ lesson.videoPath) }}" type="video/mp4">
+                </video>
+
+            {% else %}
+                <p><em>Aucune vidéo disponible pour cette leçon.</em></p>
+            {% endif %}
+        </div>
+      
+      {# nl2br garde les retours à la ligne #}
+        <div class="lesson-description">
+            {{ lesson.content|nl2br }}
+        </div>
+
+    </div>
+
+    {# BADGE VALIDATION #}
+    {% set isValidated = false %}
+    {% for v in user.lessonValidations %}
+        {% if v.lesson.id == lesson.id %}
+            {% set isValidated = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if isValidated %}
+        <span class="badge bg-success">Leçon terminée ✔</span>
+    {% endif %}
+
+        {# --- CALCUL : combien de leçons achetées dans ce cursus ? --- #}
+    {% set purchasedCount = 0 %}
+    {% for order in user.orders %}
+        {% if order.status == 'paid' %}
+            {% for item in order.orderItems %}
+                {% if item.cursus and item.cursus.id == lesson.cursus.id %}
+                    {% set purchasedCount = lesson.cursus.lessons|length %}
+                {% endif %}
+                {% if item.lesson and item.lesson.cursus.id == lesson.cursus.id %}
+                    {% set purchasedCount = purchasedCount + 1 %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+
+    {# NAVIGATION #}
+    <div class="lesson-navigation">
+
+        {% set prev = lesson.getPreviousLesson() %}
+
+        {% if prev and purchasedCount > 1 %}
+            <a href="{{ path('lesson_show', { id: prev.id }) }}" class="btn btn-secondary">
+                ← Leçon précédente
+            </a>
+        {% else %}
+            <span></span>
+        {% endif %}
+
+        <a href="{{ path('lesson_next_locked', { id: lesson.id }) }}" class="btn btn-primary">
+            Leçon suivante →
+        </a>
+
+    </div>
+
+</div>
 {% endblock %}

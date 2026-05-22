@@ -20,6 +20,10 @@ class Order
     private ?string $status = 'pending';
 
     #[ORM\Column]
+    private ?int $total = 0;
+
+
+    #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
@@ -51,6 +55,18 @@ class Order
         return $this;
     }
 
+
+        public function getTotal(): ?int
+    {
+        return $this->total;
+    }
+
+    public function setTotal(int $total): static
+    {
+        $this->total = $total;
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -64,6 +80,10 @@ class Order
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        if ($user && !$user->getOrders()->contains($this)) {
+        $user->addOrder($this);
+      }
         return $this;
     }
 

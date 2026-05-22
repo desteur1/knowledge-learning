@@ -2,29 +2,40 @@
 
 {% block title %}Mes certifications{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/styles/certification.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1>Mes certifications</h1>
+<div class="certifications-wrapper">
 
-{% if certifications is empty %}
-    <p>Aucune certification obtenue pour le moment.</p>
-{% else %}
-    <ul>
-        {% for cert in certifications %}
-            <li>
-                🎓 <strong>{{ cert.cursus.name }}</strong><br>
-                Obtenue le : {{ cert.obtainedAt|date('d/m/Y') }}<br>
+    <h1 class="certifications-title">Mes certifications</h1>
 
-                <a href="{{ path('cursus_show', {id: cert.cursus.id}) }}">
-                    Voir le cursus
-                </a>
-                <a href="{{ path('certification_download', { id: cert.id }) }}" class="btn btn-primary">
-               Télécharger en PDF
-               </a>
-            </li>
-        {% endfor %}
-    </ul>
-    
-{% endif %}
+    {% if certifications is empty %}
+        <p class="no-certification">Aucune certification obtenue pour le moment.</p>
+    {% else %}
+        <ul class="certifications-list">
+            {% for cert in certifications %}
+                <li class="certification-item">
+                    🎓 <strong>{{ cert.cursus.name }}</strong>
+                    Obtenue le : {{ cert.obtainedAt|date('d/m/Y') }}
+
+                    <div>
+                        <a href="{{ path('cursus_show', {id: cert.cursus.id}) }}" class="btn-view">
+                            Voir le cursus
+                        </a>
+
+                        <a href="{{ path('certification_download', { id: cert.id }) }}" class="btn-download">
+                            Télécharger en PDF
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+</div>
 
 {% endblock %}

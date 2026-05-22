@@ -2,6 +2,11 @@
 
 {% block title %}Changer mon mot de passe{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/styles/change_pw.css') }}">
+{% endblock %}
+
 {% block body %}
 <div class="profile-container">
     <h1>Changer mon mot de passe</h1>

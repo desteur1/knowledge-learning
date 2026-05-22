@@ -2,11 +2,18 @@
 
 {% block title %}{{ cursus.name }}{% endblock %}
 
-{% block body %}
-<div class="example-wrapper">
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('assets/styles/cursus_show.css') }}">
+{% endblock %}
 
+{% block body %}
+<div class="cursus-wrapper">
+
+    {# Compute total number of lessons #}
     {% set total = lessons|length %}
 
+    {# Compute validated lessons and next lesson to study #}
     {% if app.user %}
         {% set validated = app.user.countUserValidatedLessonsForCursus(cursus) %}
         {% set next = app.user.findNextLessonToStudy(cursus) %}
@@ -15,79 +22,112 @@
         {% set next = null %}
     {% endif %}
 
+    {# Compute progression percentage #}
     {% if total == 0 %}
-    {% set percent = 0 %}
-    <p>Ce cursus ne contient encore aucune leçon.</p>
+        {% set percent = 0 %}
+        <p>Ce cursus n'a pas encore de leçon.</p>
     {% else %}
         {% set percent = (validated / total * 100)|round %}
     {% endif %}
 
-    <h2>Leçons du cursus</h2>
+    {# Cursus title #}
+    <h2 class="cursus-title">{{ cursus.name }}</h2>
 
-    <ul>
+    {# Lessons list #}
+    <ul class="lesson-list">
         {% for lesson in lessons %}
-            <li>
-                {{ lesson.name }} - {{ lesson.price / 100 }} €
+            <li class="lesson-item">
 
-                {% if app.user and (app.user.userHasPurchasedLesson(lesson) or app.user.userHasPurchasedCursus(cursus)) %}
+                <div class="lesson-info">
+                    <span class="lesson-name">{{ lesson.name }}</span>
+                    <span class="lesson-price">{{ lesson.price / 100 }} €</span>
+                </div>
 
-                    {% set isValidated = false %}
-                    {% for v in app.user.lessonValidations %}
-                        {% if v.lesson.id == lesson.id %}
-                            {% set isValidated = true %}
+                <div class="lesson-actions">
+
+                    {% if app.user and (app.user.userHasPurchasedLesson(lesson) or app.user.userHasPurchasedCursus(cursus)) %}
+
+                        {# Check if lesson is validated #}
+                        {% set isValidated = false %}
+                        {% for v in app.user.lessonValidations %}
+                            {% if v.lesson.id == lesson.id %}
+                                {% set isValidated = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if isValidated %}
+                            <span class="lesson-validated">✔ Validée</span>
                         {% endif %}
-                    {% endfor %}
 
-                    {% if isValidated %}
-                    <span style="color: green; font-weight: bold;">Validée ✔</span>
-                    <a href="{{ path('lesson_show', {id: lesson.id}) }}" class="ms-2">Accéder</a>
-                {% else %}
-                    <a href="{{ path('lesson_show', {id: lesson.id}) }}">Accéder</a>
-                {% endif %}
+                        <a href="{{ path('lesson_show', {id: lesson.id}) }}" class="btn-primary">
+                            Accéder
+                        </a>
 
+                    {% else %}
+                        <a href="{{ path('purchase_lesson', {id: lesson.id}) }}" class="btn-secondary">
+                            Acheter
+                        </a>
+                    {% endif %}
 
-                {% else %}
-                    <a href="{{ path('purchase_lesson', {id: lesson.id}) }}">Acheter</a>
-                {% endif %}
+                </div>
+
             </li>
         {% endfor %}
     </ul>
 
-    <hr>
+    <hr class="separator">
 
-    {% if app.user and app.user.userHasPurchasedCursus(cursus) %}
-        {% if validated == 0 %}
-            <a href="{{ path('lesson_show', {id: lessons|first.id}) }}">
-                Commencer le cursus
-            </a>
+    {# Cursus purchase or continue #}
+    <div class="cursus-actions">
+        {% if app.user and app.user.userHasPurchasedCursus(cursus) %}
 
-        {% elseif next %}
-            <a href="{{ path('lesson_show', {id: next.id}) }}" class="btn btn-primary mt-3">
-                Continuer le cursus
-            </a>
-        {% endif %}
+            {% if validated == 0 %}
+                <a href="{{ path('lesson_show', {id: lessons|first.id}) }}" class="btn-start">
+                    Commencer le cursus
+                </a>
 
-    {% else %}
+            {% elseif next %}
+                <a href="{{ path('lesson_show', {id: next.id}) }}" class="btn-primary">
+                    Continuer le cursus
+                </a>
+            {% endif %}
+
+        {% else %}
             {% if remainingPrice > 0 %}
-            <a href="{{ path('purchase_cursus', {id: cursus.id}) }}">
-                Acheter ce cursus ({{ remainingPrice / 100 }} €)
-            </a>
+                <a href="{{ path('purchase_cursus', {id: cursus.id}) }}" class="btn-buy-cursus">
+                    Acheter ce cursus ({{ remainingPrice / 100 }} €)
+                </a>
+            {% endif %}
         {% endif %}
-
-    {% endif %}
-
-    <h3>Progression du cursus</h3>
-    <p>{{ validated }} leçons validées sur {{ total }} ({{ percent }}%)</p>
-
-    <div style="background:#ddd; width:300px; height:20px; border-radius:5px;">
-        <div style="background:#4caf50; width:{{ percent }}%; height:100%; border-radius:5px;"></div>
     </div>
 
+    {# Progress section #}
+    <h3 class="progress-title">Progression du cursus</h3>
+    <p class="progress-text">{{ validated }} leçons validées sur {{ total }} ({{ percent }}%)</p>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar" style="width: {{ percent }}%;"></div>
+    </div>
+
+    {# Certification message #}
     {% if app.user and app.user.userHasCertificationForCursus(cursus) %}
-        <div class="alert alert-success mt-3">
+        <div class="alert-success">
             🎓 Vous avez obtenu la certification de ce cursus !
         </div>
     {% endif %}
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const alert = document.querySelector('.alert-success');
+        if (alert) {
+            setTimeout(() => {
+                alert.classList.add('fade-out');
+                setTimeout(() => alert.remove(), 600);
+            }, 3000); // 3 secondes avant disparition
+        }
+    });
+</script>
+
 {% endblock %}

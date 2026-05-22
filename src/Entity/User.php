@@ -175,6 +175,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->orders;
     }
 
+        public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setUser($this);
+        }
+        return $this;
+    }
+
+
     // =========================
     // LESSON VALIDATIONS
     // =========================
@@ -183,6 +193,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lessonValidations;
     }
 
+        public function addLessonValidation(LessonValidation $validation): self
+    {
+        if (!$this->lessonValidations->contains($validation)) {
+            $this->lessonValidations->add($validation);
+            $validation->setUser($this);
+        }
+        return $this;
+    }
+
+
     // =========================
     // CERTIFICATIONS
     // =========================
@@ -190,6 +210,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->certifications;
     }
+
+        public function addCertification(Certification $cert): self
+    {
+        if (!$this->certifications->contains($cert)) {
+            $this->certifications->add($cert);
+            $cert->setUser($this);
+        }
+        return $this;
+    }
+
 
     // =========================
     // EMAIL VERIFICATION TOKENS (MULTIPLE)

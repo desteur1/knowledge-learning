@@ -8,7 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 class OrderCrudController extends AbstractCrudController
 {
@@ -30,7 +30,10 @@ class OrderCrudController extends AbstractCrudController
                 ->hideOnForm(),
                 
             AssociationField::new('orderItems', 'Articles de la commande')
+                ->onlyOnDetail()
                 ,
+            IntegerField::new('total', 'Total')
+                ->hideOnForm(),
         ];
     }
 }

@@ -29,11 +29,11 @@ class ChangePasswordController extends AbstractController
             if (strlen($newPassword) < 6) {
                 $this->addFlash('error', 'Le mot de passe doit contenir au moins 6 caractères.');
             } else {
-                // Hash du mot de passe
+                // Hash the new password and set it on the user
                 $hashed = $passwordHasher->hashPassword($user, $newPassword);
                 $user->setPassword($hashed);
 
-                // Sauvegarde
+                // Save the updated user entity
                 $em->flush();
 
                 $this->addFlash('success', 'Mot de passe mis à jour.');

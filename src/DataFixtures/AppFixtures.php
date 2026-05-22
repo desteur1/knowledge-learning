@@ -23,7 +23,7 @@ class AppFixtures extends Fixture
 
         // Cursus guitare
         $guitare = new Cursus();
-        $guitare->setName("Cursus d’initiation à la guitare");
+        $guitare->setName("Initiation à la guitare");
         // $guitare->setPrice(50); // dont exist anymore, price is dynamic
         $guitare->setTheme($musique);
         $manager->persist($guitare);
@@ -31,7 +31,26 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Découverte de l’instrument");
         $lesson->setPrice(2600);
-        $lesson->setContent("Contenu de la leçon : découverte de l’instrument.");
+        $lesson->setContent("Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Conclusion du cours.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=Gg1L-sBIxnY");
         $lesson->setCursus($guitare);
         $manager->persist($lesson);
@@ -39,14 +58,50 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les accords et les gammes");
         $lesson->setPrice(2600);
-        $lesson->setContent("Contenu de la leçon : les accords et les gammes.");
+        $lesson->setContent(" les accords et les gammes.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=BBz-Jyr23M4");
         $lesson->setCursus($guitare);
         $manager->persist($lesson);
 
         // Cursus piano
         $piano = new Cursus();
-        $piano->setName("Cursus d’initiation au piano");
+        $piano->setName("Initiation au piano");
         // $piano->setPrice(50); // dont exist anymore, price is dynamic
         $piano->setTheme($musique);
         $manager->persist($piano);
@@ -54,7 +109,43 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Découverte de l’instrument");
         $lesson->setPrice(2600);
-        $lesson->setContent("Contenu de la leçon : découverte du piano.");
+        $lesson->setContent(" découverte du piano.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=vphWgqbF-AM");
         $lesson->setCursus($piano);
         $manager->persist($lesson);
@@ -62,7 +153,43 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les accords et les gammes");
         $lesson->setPrice(2600);
-        $lesson->setContent("Contenu de la leçon : les accords et les gammes au piano.");
+        $lesson->setContent(" les accords et les gammes au piano.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=Nc0dfOmTDE4");
         $lesson->setCursus($piano);
         $manager->persist($lesson);
@@ -76,7 +203,7 @@ class AppFixtures extends Fixture
         $manager->persist($info);
 
         $devweb = new Cursus();
-        $devweb->setName("Cursus d’initiation au développement web");
+        $devweb->setName("Initiation au développement web");
         // $devweb->setPrice(60); // dont exist anymore, price is dynamic
         $devweb->setTheme($info);
         $manager->persist($devweb);
@@ -84,7 +211,43 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les langages Html et CSS");
         $lesson->setPrice(3200);
-        $lesson->setContent("Introduction aux langages Html et CSS.");
+        $lesson->setContent("Introduction aux langages Html et CSS.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=8FqZZrbnwkM");
         $lesson->setCursus($devweb);
         $manager->persist($lesson);
@@ -92,7 +255,18 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Dynamiser votre site avec Javascript");
         $lesson->setPrice(3200);
-        $lesson->setContent("Introduction à Javascript.");
+        $lesson->setContent("Introduction à Javascript.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=_ojGHGxcr2U");
         $lesson->setCursus($devweb);
         $manager->persist($lesson);
@@ -106,7 +280,7 @@ class AppFixtures extends Fixture
         $manager->persist($jardin);
 
         $initJardin = new Cursus();
-        $initJardin->setName("Cursus d’initiation au jardinage");
+        $initJardin->setName("Initiation au jardinage");
         // $initJardin->setPrice(30); // dont exist anymore, price is dynamic
         $initJardin->setTheme($jardin);
         $manager->persist($initJardin);
@@ -114,7 +288,42 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les outils du jardinier");
         $lesson->setPrice(1600);
-        $lesson->setContent("Présentation des outils nécessaires au jardinier.");
+        $lesson->setContent("Présentation des outils nécessaires au jardinier
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=Fp7HdYg-yFw&t=1s");
         $lesson->setCursus($initJardin);
         $manager->persist($lesson);
@@ -122,7 +331,43 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Jardiner avec la lune");
         $lesson->setPrice(1600);
-        $lesson->setContent("Introduction au jardinage avec la lune.");
+        $lesson->setContent("Introduction au jardinage avec la lune
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=HU-nbs3BhRM");
         $lesson->setCursus($initJardin);
         $manager->persist($lesson);
@@ -136,7 +381,7 @@ class AppFixtures extends Fixture
         $manager->persist($cuisine);
 
         $initCuisine = new Cursus();
-        $initCuisine->setName("Cursus d’initiation à la cuisine");
+        $initCuisine->setName("Initiation à la cuisine");
         // $initCuisine->setPrice(44); // dont exist anymore, price is dynamic
         $initCuisine->setTheme($cuisine);
         $manager->persist($initCuisine);
@@ -144,7 +389,43 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les modes de cuisson");
         $lesson->setPrice(2300);
-        $lesson->setContent("Présentation des modes de cuisson.");
+        $lesson->setContent("Présentation des modes de cuisson
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=Ao2VnLWj2Dw");
         $lesson->setCursus($initCuisine);
         $manager->persist($lesson);
@@ -152,29 +433,137 @@ class AppFixtures extends Fixture
         $lesson = new Lesson();
         $lesson->setName("Les saveurs");
         $lesson->setPrice(2300);
-        $lesson->setContent("Découverte des saveurs.");
+        $lesson->setContent("Découverte des saveurs.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=wm75vaVjHVA");
         $lesson->setCursus($initCuisine);
         $manager->persist($lesson);
 
         $dressage = new Cursus();
-        $dressage->setName("Cursus d’initiation à l’art du dressage culinaire");
+        $dressage->setName("Initiation à l’art du dressage culinaire");
         // $dressage->setPrice(48); // dont exist anymore, price is dynamic
         $dressage->setTheme($cuisine);
         $manager->persist($dressage);
 
         $lesson = new Lesson();
-        $lesson->setName("Mettre en œuvre le style dans l’assiette");
+        $lesson->setName("Mettre en œuvre le style dans l’assiette.");
         $lesson->setPrice(2600);
-        $lesson->setContent("Apprendre à styliser une assiette.");
+        $lesson->setContent("Apprendre à styliser une assiette.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=T2leakA9Uo8");
         $lesson->setCursus($dressage);
         $manager->persist($lesson);
 
         $lesson = new Lesson();
-        $lesson->setName("Harmoniser un repas à quatre plats");
+        $lesson->setName("Harmoniser un repas à quatre plats.");
         $lesson->setPrice(2600);
-        $lesson->setContent("Créer un repas harmonieux en quatre plats.");
+        $lesson->setContent("Créer un repas harmonieux en quatre plats.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+        Conclusion du cours.Introduction à la guitare.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat");
         $lesson->setVideoUrl("https://www.youtube.com/watch?v=N56ACTuqQ3c");
         $lesson->setCursus($dressage);
         $manager->persist($lesson);

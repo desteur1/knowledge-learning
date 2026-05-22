@@ -23,14 +23,14 @@ final class CursusController extends AbstractController
     {
         $user = $this->getUser();
 
-        // Calcul du prix restant
+        // Calculate remaining price for the cursus if user is logged in, otherwise null
         $remainingPrice = null;
 
         if ($user) {
             $remainingPrice = $user->calculateRemainingPriceForCursus($cursus);
         }
 
-
+       // Access control: if user is logged in, they must have access to either the cursus or at least one lesson
         return $this->render('cursus/show.html.twig', [
             'cursus' => $cursus,
             'lessons' => $cursus->getLessons(),

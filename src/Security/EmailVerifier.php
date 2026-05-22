@@ -20,14 +20,16 @@ class EmailVerifier
 
     public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
     {
-        //  IMPORTANT : on passe l'ID dans les paramètres de la route
+        
+        // IMPORTANT: pass the user ID in the route parameters
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),
             $user->getEmail(),
-            ['id' => $user->getId()] // ← obligatoire pour route /verify/email/{id}
+            ['id' => $user->getId()] // mandatory to pass the ID for later validation
         );
-
+        
+        // add signed url and expiration details to the email context
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
@@ -40,27 +42,28 @@ class EmailVerifier
 
     public function handleEmailConfirmation(Request $request): void
     {
-        // On récupère l'ID depuis la route
+        // collect id from the URL
         $userId = $request->attributes->get('id');
 
         if (!$userId) {
             throw new \LogicException('Missing user ID in verification link.');
         }
 
+          // find the user and validate email
         $user = $this->entityManager->getRepository(User::class)->find($userId);
 
         if (!$user) {
             throw new \LogicException('User not found.');
         }
 
-        // Validation de la signature
+        // validate email confirmation link, sets User::isVerified=true and persists
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
             $request,
             $userId,
             $user->getEmail()
         );
 
-        // Activation du compte
+        // Activate the user account by setting isVerified to true
         $user->setIsVerified(true);
         $this->entityManager->flush();
     }
