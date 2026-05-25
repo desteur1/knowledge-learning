@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Blameable;
+use App\Entity\Traits\Timestampable;
 use App\Repository\CursusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CursusRepository::class)]
 class Cursus
 {
+    use Timestampable;
+    use Blameable;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -17,9 +22,6 @@ class Cursus
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    // #[ORM\Column]
-    // private ?int $price = null; // price in cents
 
     #[ORM\ManyToOne(inversedBy: 'cursuses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -66,17 +68,7 @@ class Cursus
         return $this;
     }
 
-    // public function getPrice(): ?int
-    // {
-    //     return $this->price;
-    // }
-
-   
-    // public function setPrice(int $price): static
-    // {
-    //     $this->price = $price;
-    //     return $this;
-    // }
+    
 
     public function getDynamicPrice(): int
     {
@@ -229,6 +221,24 @@ class Cursus
     {
         return trim($this->name ?: 'Cursus #' . $this->id);
     }
+
+     // =========================
+    // TIMESTAMPABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self { $this->createdAt = $createdAt; return $this; }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self { $this->updatedAt = $updatedAt; return $this; }
+
+    // =========================
+    // BLAMEABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedBy(): ?User { return $this->createdBy; }
+    public function setCreatedBy(?User $user): self { $this->createdBy = $user; return $this; }
+
+    public function getUpdatedBy(): ?User { return $this->updatedBy; }
+    public function setUpdatedBy(?User $user): self { $this->updatedBy = $user; return $this; }
 
 
 }

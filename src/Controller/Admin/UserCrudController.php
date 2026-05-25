@@ -9,6 +9,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -32,6 +34,12 @@ class UserCrudController extends AbstractCrudController
             TextField::new('password', 'Mot de passe')
                 ->onlyOnForms()
                 ->setHelp('⚠️ Le mot de passe doit être déjà hashé ou géré via un formulaire dédié.'),
+
+                DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail(),
+
+            AssociationField::new('createdBy', 'Créé par')->onlyOnDetail(),
+            AssociationField::new('updatedBy', 'Modifié par')->onlyOnDetail(),
         ];
     }
 }

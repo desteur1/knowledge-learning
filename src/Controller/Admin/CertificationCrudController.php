@@ -25,6 +25,12 @@ class CertificationCrudController extends AbstractCrudController
 
             DateTimeField::new('obtainedAt', 'Délivré le')
                 ->hideOnForm(),
+
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail(),
+
+            AssociationField::new('createdBy', 'Créé par')->onlyOnDetail(),
+            AssociationField::new('updatedBy', 'Modifié par')->onlyOnDetail(),
         ];
     }
 }

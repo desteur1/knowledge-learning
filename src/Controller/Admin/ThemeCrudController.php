@@ -6,6 +6,8 @@ use App\Entity\Theme;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class ThemeCrudController extends AbstractCrudController
 {
@@ -19,6 +21,12 @@ class ThemeCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nom du thème'),
+
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail(),
+
+            AssociationField::new('createdBy', 'Créé par')->onlyOnDetail(),
+            AssociationField::new('updatedBy', 'Modifié par')->onlyOnDetail(),
         ];
     }
 }

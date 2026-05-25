@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class LessonCrudController extends AbstractCrudController
 {
@@ -52,6 +53,12 @@ class LessonCrudController extends AbstractCrudController
                 ->autocomplete(),
 
             IntegerField::new('position')->setSortable(true),
+
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail(),
+
+            AssociationField::new('createdBy', 'Créé par')->onlyOnDetail(),
+            AssociationField::new('updatedBy', 'Modifié par')->onlyOnDetail(),
         ];
     }
 }
