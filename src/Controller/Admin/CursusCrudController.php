@@ -5,9 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\Cursus;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class CursusCrudController extends AbstractCrudController
 {
@@ -25,6 +25,12 @@ class CursusCrudController extends AbstractCrudController
 
             AssociationField::new('theme', 'Thème associé')
                 ->setRequired(true), // important to link the cursus to a theme
+
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Modifié le')->onlyOnDetail(),
+
+            AssociationField::new('createdBy', 'Créé par')->onlyOnDetail(),
+            AssociationField::new('updatedBy', 'Modifié par')->onlyOnDetail(),
         ];
     }
 }

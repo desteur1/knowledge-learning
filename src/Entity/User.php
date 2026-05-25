@@ -8,6 +8,9 @@ use App\Entity\Cursus;
 use App\Entity\Order;
 use App\Entity\LessonValidation;
 use App\Entity\Certification;
+use App\Entity\EmailVerificationToken;
+use App\Entity\Traits\Timestampable;
+use App\Entity\Traits\Blameable;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,10 +19,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use Timestampable;
+    use Blameable;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -40,10 +47,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column]
+    private bool $isVerified = false;
+
     // #[ORM\Column]
     // private bool $isActive = true;
 
-
+     
+    // =========================
+    // RELATIONS
+    // =========================
     /**
      * @var Collection<int, Order>
      */
@@ -68,8 +81,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user' ,targetEntity: EmailVerificationToken::class, cascade: ['persist', 'remove'], orphanRemoval: true)] 
     private Collection $emailVerificationTokens;
 
-    #[ORM\Column]
-    private bool $isVerified = false;
 
     public function __construct()
     {
@@ -155,6 +166,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
     // public function isActive(): bool
     // {
     //     return $this->isActive;
@@ -165,7 +188,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //     $this->isActive = $isActive;
     //     return $this;
     // }
+     
+    // =========================
+    // TIMESTAMPABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
+    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self { $this->updatedAt = $updatedAt; return $this; }
+
+    // =========================
+    // BLAMEABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedBy(): ?User { return $this->createdBy; }
+    public function setCreatedBy(?User $user): self { $this->createdBy = $user; return $this; }
+
+    public function getUpdatedBy(): ?User { return $this->updatedBy; }
+    public function setUpdatedBy(?User $user): self { $this->updatedBy = $user; return $this; }
 
     // =========================
     // ORDERS
@@ -246,18 +286,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 // relation supprimée côté collection uniquement
             }
         }
-
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }
@@ -404,6 +432,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return max(0, $remaining);
     }
+
+        public function hasAccessToLesson(Lesson $lesson): bool
+    {
+        // if user has already purchased the lesson, they have access
+        if ($this->userHasPurchasedLesson($lesson)) {
+            return true;
+        }
+
+        // if user has already purchased the cursus, they have access to all its lessons
+        if ($this->userHasPurchasedCursus($lesson->getCursus())) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     public function __toString(): string
     {

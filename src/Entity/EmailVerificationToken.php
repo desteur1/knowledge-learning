@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Blameable;
+use App\Entity\Traits\Timestampable;
 use App\Repository\EmailVerificationTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmailVerificationTokenRepository::class)]
 class EmailVerificationToken
 {
+    use Timestampable;
+    use Blameable;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,77 +27,48 @@ class EmailVerificationToken
     #[ORM\Column]
     private bool $isUsed = false;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
     #[ORM\ManyToOne(inversedBy: 'emailVerificationTokens')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token): static
-    {
-        $this->token = $token;
-
-        return $this;
-    }
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
         $this->expiresAt = (new \DateTimeImmutable())->modify('+1 day');
         $this->isUsed = false;
     }
 
-    public function getExpiresAt(): ?\DateTimeImmutable
-    {
-        return $this->expiresAt;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function setExpiresAt(\DateTimeImmutable $expiresAt): static
-    {
-        $this->expiresAt = $expiresAt;
+    public function getToken(): ?string { return $this->token; }
+    public function setToken(string $token): static { $this->token = $token; return $this; }
 
-        return $this;
-    }
-    public function isExpired(): bool
-    {
-        return $this->expiresAt < new \DateTimeImmutable();
-    }
+    public function getExpiresAt(): ?\DateTimeImmutable { return $this->expiresAt; }
+    public function setExpiresAt(\DateTimeImmutable $expiresAt): static { $this->expiresAt = $expiresAt; return $this; }
 
-    public function isUsed(): bool
-    {
-        return $this->isUsed;
-    }
+    public function isExpired(): bool { return $this->expiresAt < new \DateTimeImmutable(); }
 
-    public function setIsUsed(bool $isUsed): static
-    {
-        $this->isUsed = $isUsed;
+    public function isUsed(): bool { return $this->isUsed; }
+    public function setIsUsed(bool $isUsed): static { $this->isUsed = $isUsed; return $this; }
+    public function markAsUsed(): void { $this->isUsed = true; }
 
-        return $this;
-    }
-    public function markAsUsed(): void
-    {
-        $this->isUsed = true;
-    }
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(User $user): static { $this->user = $user; return $this; }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
+    // =========================
+    // TIMESTAMPABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
-    public function setUser(User $user): static
-    {
-        $this->user = $user;
+    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self { $this->updatedAt = $updatedAt; return $this; }
 
-        return $this;
-    }
+    // =========================
+    // BLAMEABLE GETTERS/SETTERS
+    // =========================
+    public function getCreatedBy(): ?User { return $this->createdBy; }
+    public function setCreatedBy(?User $user): self { $this->createdBy = $user; return $this; }
+
+    public function getUpdatedBy(): ?User { return $this->updatedBy; }
+    public function setUpdatedBy(?User $user): self { $this->updatedBy = $user; return $this; }
 }
